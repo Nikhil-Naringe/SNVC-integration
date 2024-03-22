@@ -1,0 +1,146 @@
+django-admin startproject myproject
+cd myproject
+python manage.py startapp myapp
+
+
+
+
+
+
+
+
+myapp/models.py:
+
+from django.db import models
+
+class Client(models.Model):
+    name = models.CharField(max_length=200)
+    username = models.CharField(max_length=200)
+    password = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+Let's also create a model for operating systems and test suites in myapp/models.py:
+
+class OperatingSystem(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+class TestSuite(models.Model):
+    name = models.CharField(max_length=200)
+    operating_system = models.ForeignKey(OperatingSystem, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+
+
+
+
+
+
+
+
+Then, let's create a serializer for our models in myapp/serializers.py:
+
+from rest_framework import serializers
+from .models import Client, OperatingSystem, TestSuite
+
+class OperatingSystemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OperatingSystem
+        fields = ['id', 'name']
+
+class TestSuiteSerializer(serializers.ModelSerializer):
+    operating_system = OperatingSystemSerializer()
+
+    class Meta:
+        model = TestSuite
+        fields = ['id', 'name', 'operating_system']
+
+class ClientSerializer(serializers.ModelSerializer):
+    operating_systems = OperatingSystemSerializer(many=True)
+    test_suites = TestSuiteSerializer(many=True)
+
+    class Meta:
+        model = Client
+        fields = ['id', 'name', 'username', 'password', 'operating_systems', 'test_suites']
+
+
+
+
+
+
+
+
+
+Next, let's create a view for our models in myapp/views.py:
+
+from rest_framework import viewsets
+from .models import Client, OperatingSystem, TestSuite
+from .serializers import ClientSerializer, OperatingSystemSerializer, TestSuiteSerializer
+
+class OperatingSystemViewSet(viewsets.ModelViewSet):
+    queryset = OperatingSystem.objects.all()
+    serializer_class = OperatingSystemSerializer
+
+class TestSuiteViewSet(viewsets.ModelViewSet):
+    queryset = TestSuite.objects.all()
+    serializer_class = TestSuiteSerializer
+
+class ClientViewSet(viewsets.ModelViewSet):
+    queryset = Client.objects.all()
+    serializer_class = ClientSerializer
+
+
+
+
+
+
+
+
+
+
+Finally, let's create a URL for our views in myapp/urls.py:
+
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import ClientViewSet, OperatingSystemViewSet, TestSuiteViewSet
+
+router = DefaultRouter()
+router.register(r'clients', ClientViewSet)
+router.register(r'operatingsystems', OperatingSystemViewSet)
+router.register(r'testsuites', TestSuiteViewSet)
+
+urlpatterns = [
+    path('', include(router.urls)),
+]
+
+
+
+And include the app's URLs in the project's myproject/urls.py:
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('myapp.urls')),
+]
+
+
+
+
+
+
+
+
+
+
+
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver

@@ -1,0 +1,10 @@
+{
+    "protocol": "SMB",
+    "host_ip_address": "192.168.35.4",
+    "share": "share",
+    "user_name":"Nikhil",
+    "password": "123",
+    "log_level": "Debug",
+    "min_dialect": 200,
+    "max_dialect": 299
+}
