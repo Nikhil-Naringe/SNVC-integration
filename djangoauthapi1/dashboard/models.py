@@ -52,7 +52,7 @@ class TestSuiteName(models.Model):
     suite_name = models.CharField(max_length=50, verbose_name=_("Test Suite"))
     location = models.CharField(max_length=50, help_text=_("Enter folder location"), verbose_name=_("Location"))
     user_name = models.CharField(max_length=50, verbose_name=_("User Name"))
-    password = models.CharField(max_length=50, validators=[RegexValidator(regex=r'^[\w.@+-]+$', message='Invalid password format')], verbose_name=_("Password"))
+    password = models.CharField(max_length=50, validators=[RegexValidator(regex=r'^[\w.@%+-]+$', message='Invalid password format')], verbose_name=_("Password"))
     test_suite = models.ForeignKey(TestSuite, on_delete=models.CASCADE)
     ip_address = models.GenericIPAddressField(verbose_name=_("IP Address"), default='0.0.0.0')
 

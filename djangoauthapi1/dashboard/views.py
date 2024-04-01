@@ -327,35 +327,39 @@ class TestSuiteNameDetailView(RetrieveAPIView):
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    
+
+
 
 from django.http import HttpResponse
 from django.views import View
 
-class TestSuiteRun(View):
-    def start_suite(self, requests):
-        server_data = TestSuite.objects.latest('id')
-        client_data = TestSuiteName.objects.latest('id')
-        host_ip_address = server_data.host_ip_address
-        share = server_data.share
-        server_user_name = server_data.user_name
-        server_password = server_data.password
-        log_level = server_data.log_level
-        suite_name = client_data.suite_name
-        client_ip_address = client_data.ip_address
-        client_user_name = client_data.user_name
-        client_password = client_data.password
+# class TestSuiteRun(View):
+def start_suite(requests):
+    server_data = TestSuite.objects.latest('id')
+    client_data = TestSuiteName.objects.latest('id')
+    host_ip_address = server_data.host_ip_address
+    share = server_data.share
+    server_user_name = server_data.user_name
+    server_password = server_data.password
+    log_level = server_data.log_level
+    suite_name = client_data.suite_name
+    client_ip_address = client_data.ip_address
+    client_user_name = client_data.user_name
+    client_password = client_data.password
+        
 
-        print("Host IP Address:", host_ip_address)
-        print("Share:", share)
-        print("Server User Name:", server_user_name)
-        print("Server Password:", server_password)
-        print("Log Level:", log_level)
-        print("Suite Name:", suite_name)
-        print("Client IP Address:", client_ip_address)
-        print("Client User Name:", client_user_name)
-        print("Client Password:", client_password)
-  
-        connect_remote_vm.connect_to_vm(server_ip=host_ip_address,
+    print("Host IP Address:", host_ip_address)
+    print("Share:", share)
+    print("Server User Name:", server_user_name)
+    print("Server Password:", server_password)
+    print("Log Level:", log_level)
+    print("Suite Name:", suite_name)
+    print("Client IP Address:", client_ip_address)
+    print("Client User Name:", client_user_name)
+    print("Client Password:", client_password)
+    
+    connectionResponse = connect_remote_vm.connect_to_vm(server_ip=host_ip_address,
                                         server_username=server_user_name,
                                         server_password=server_password,
                                         pike_log_level=log_level,
@@ -377,10 +381,10 @@ class TestSuiteRun(View):
         # response['Content-Disposition'] = f'attachment; filename="{self.suite_name}"'
         #
         # return response
-        return HttpResponse("Test Suite started successfully")
+    return HttpResponse(f"Test Suite started successfully{connectionResponse}")
 
-test_suite_run = TestSuiteRun()
-test_suite_run.start_suite(None)
+# test_suite_run = TestSuiteRun()
+# test_suite_run.start_suite(None)
 
 
 # class TestSuiteRun:

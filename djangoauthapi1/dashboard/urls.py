@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import (
+from .views import *
+from .views import(
     TestSuiteCreateView,
     TestSuiteNameCreateView,
     TestSuiteListView,
@@ -11,7 +12,7 @@ from .views import (
     TestSuiteNameRetrieveView,
     TestSuiteNameUpdateView, 
     TestSuiteNameDetailView,
-    TestSuiteRun,
+    # TestSuiteRun,
 )
 
 urlpatterns = [
@@ -26,5 +27,5 @@ urlpatterns = [
     path('test-suite-name-delete/<int:pk>/', TestSuiteNameDeleteView.as_view(), name='test_suite_name_delete'),
     path('test-suite-name-update/<int:pk>/', TestSuiteNameUpdateView.as_view(), name='test_suite_name_update'),
     path('test-suite-name-detail/<int:pk>/', TestSuiteNameDetailView.as_view(), name='test_suite_name_detail'),
-    path('run-test-suite/', TestSuiteRun.as_view(), name='run-test-suite'),
+    path('run-test-suite/',start_suite, name='run-test-suite'),
 ]

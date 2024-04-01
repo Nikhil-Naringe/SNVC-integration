@@ -55,18 +55,21 @@ def connect_to_vm(server_ip: str | None = None,
         else:
             command_to_run = "mac_command"
         output = execute_command(ssh_client, command_to_run)
-
         generate_log_report(output, suite_name)
         if "OK" in output:
-            print("Passed")
+            return "Test Suite Passed"
+        elif "FAILED" in output:
+            return "Test Suite Failed"
         else:
-            print("Failed")
+            return "No Output"
 
         # return ssh_client
     except paramiko.AuthenticationException:
-        print("Authentication failed, please verify your credentials.")
+        return "Authentication failed, please verify your credentials."
     except paramiko.SSHException as ssh_exception:
-        print(f"Unable to establish SSH connection: {ssh_exception}")
+        return f"Unable to establish SSH connection: {ssh_exception}"
+    except Exception:
+        return "Other error"
     finally:
         # Close the SSH connection
         ssh_client.close()

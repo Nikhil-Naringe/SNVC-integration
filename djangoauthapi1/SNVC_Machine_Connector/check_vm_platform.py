@@ -12,8 +12,6 @@ class PlaformInfo:
         """
         Check windows platform
         """
-        import pdb
-        pdb.set_trace()
         stdin, stdout, stderr = ssh_client.exec_command('systeminfo | find "OS Name"')
         system_info = stdout.read().decode().strip().split(':')[1].strip().split()[1]
         return system_info == 'Windows'

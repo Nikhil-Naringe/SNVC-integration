@@ -3,8 +3,7 @@ from pprint import pprint
 
 def execute_command(ssh_client, command):
     try:
-        import pdb
-        pdb.set_trace()
+        
         # Execute the command
         stdin, stdout, stderr = ssh_client.exec_command(command+" 2>&1",timeout=5)
         # Read the output
